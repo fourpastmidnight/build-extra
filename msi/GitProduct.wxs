@@ -312,7 +312,17 @@
       <DialogRef Id="ProgressDlg" />
       <DialogRef Id="ResumeDlg" />
       <DialogRef Id="UserExit" />
-      <DialogRef Id="GitMaintenanceTypeDlg"/>
+
+      <!-- These dialogs are not requried, but are also not referenced anywhere else.
+           These dialogs contain markup so that they are scheduled in the InstallUISequence
+           table as the dialog that is the first dialog to be shown depending on the
+           installation scenario. Since they are "root" dialogs that start a UI
+           installation sequence, they must be referenced in this manner in order to not
+           generate MSI build errors, but also so that they are included at all in the
+           generated installer.
+      -->
+      <DialogRef Id="WelcomeDlg" />
+      <DialogRef Id="MaintenanceWelcomeDlg" />
 
       <!-- WiX's UI extensibility allows you to orchestrate the flow of your installer dialogs. -->
       <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
@@ -366,11 +376,6 @@
       <Publish Dialog="GitMaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg" Order="4">1</Publish>
       <Publish Dialog="GitMaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg" Order="4">1</Publish>
       <Publish Dialog="GitMaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
-
-      <InstallUISequence>
-        <Show Dialog="WelcomeDlg" After="CostFinalize" />
-      </InstallUISequence>
-
     </UI>
   </Fragment>
 
