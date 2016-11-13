@@ -1,3 +1,4 @@
+//#define DEBUG
 #define STRICT
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
@@ -43,25 +44,37 @@ WINAPI __declspec(dllexport)
 int edit_git_bash(LPWSTR git_bash_path, LPWSTR new_command_line)
 {
 	HANDLE handle;
-	int len, alloc, result = 0;
+	int result = 0;
+	size_t cchNewCommandLine, alloc;
 	WCHAR *buffer;
 
-	len = wcslen(new_command_line);
-	alloc = 2 * (len + 16);
-	buffer = calloc(alloc, 1);
+	// When updating string table resources, you must update the entire string table.
+	// Strings in string tables are stored as (LENGTH, STRING) pairs, where STRING is a
+	// Unicode string and LENGTH is a WCHAR which contains the count of chracters in STRING.
+	//
+	// Each string table contains 16 strings.
+	//
+	// To skip string entries, simply provide an empty entry (e.g. "", or 0x0000).
+	//
+	// Therefore, count up the total number of characters of the strings in the string table
+	// and add 16 (one WCHAR for each string in the table for recording the size of the strings)
+	// This is the size of WCHARs you must allocate for your buffer.
+	cchNewCommandLine = wcslen(new_command_line);
+	alloc = cchNewCommandLine + 16;
+	buffer = calloc(alloc, sizeof(WCHAR));
 
 	if (!buffer)
 		return 1;
 
-	buffer[0] = (WCHAR) len;
-	memcpy(buffer + 1, new_command_line, 2 * len);
+	buffer[0] = (WCHAR) cchNewCommandLine;
+	memcpy(buffer + 1, new_command_line, (cchNewCommandLine * sizeof(WCHAR)));
 
 	if (!(handle = BeginUpdateResource(git_bash_path, FALSE)))
 		return 2;
 
 	if (!UpdateResource(handle, RT_STRING, MAKEINTRESOURCE(1),
 			MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
-			buffer, alloc))
+			buffer, alloc * sizeof(WCHAR)))
 		result = 3;
 
 	if (!EndUpdateResource(handle, FALSE))
@@ -75,11 +88,12 @@ int main(int argc, char **argv)
 {
 	int wargc, result;
 	LPWSTR *wargv;
+	LPWSTR new_command_line;
 
 #ifdef DEBUG
 	LPTSTR cmdLine = GetCommandLineW();
 	fwprintf(stderr, L"Command Line: %s\n", cmdLine);
-	
+
 	wargv = CommandLineToArgvW(cmdLine, &wargc);
 
 	for (int i = 1; i < wargc; ++i)
@@ -89,12 +103,23 @@ int main(int argc, char **argv)
 #endif
 
 	if (wargc != 3) {
-		fwprintf(stderr, L"Usage: %s <path-to-exe> <new-commad-line>\n",
+		fwprintf(stderr, L"\nUsage: %s <path-to-exe> <terminal-host>\n\n  <path-to-exe>\t\tPath to 'git-bash.exe'\n  <terminal-host>\tMinTTY | ConHost (case-insensitive)\n",
 			wargv[0]);
 		exit(1);
 	}
 
-	result = edit_git_bash(wargv[1], wargv[2]);
+	// Default to MinTTY.
+	new_command_line = L"APP_ID=GitForWindows.Bash ALLOC_CONSOLE=1 usr\\bin\\mintty.exe -o AppID=GitForWindows.Bash -o AppLaunchCmd=\"@@EXEPATH@@\\git-bash.exe\" -o AppName=\"Git Bash\" -i \"@@EXEPATH@@\\git-bash.exe\" --stare-taskbar-properties -- /usr/bin/bash --login -i";
+	if (wcsicmp(wargv[2], L"ConHost") == 0) {
+		new_command_line = L"SHOW_CONSOLE=1 APPEND_QUOTE=1 @@COMSPEC@@ /S /C \"\"@@EXEPATH@@\\usr\\bin\\bash.exe\" --login -i";
+	}
+
+	if (wcsicmp(wargv[2], L"MinTTY") != 0) {
+		fwprintf(stderr, L"Invalid Git Bash terminal host selection: '%s'.\nValid terminal hosts are 'MinTTY' or 'ConHost'.\n", wargv[2]);
+		exit(1);
+	}
+
+	result = edit_git_bash(wargv[1], new_command_line);
 
 	if (result)
 		fwprintf(stderr, L"Error editing %s: %d\n", wargv[1], result);

@@ -261,15 +261,14 @@ external 'CreateHardLinkW@Kernel32.dll stdcall delayload setuponly';
 external 'CreateHardLinkA@Kernel32.dll stdcall delayload setuponly';
 #endif
 
-function OverrideGitBashCommandLine(GitBashPath:String;CommandLine:String):Integer;
+function SetGitBashTerminalHost(GitBashPath:String;TerminalHost:String):Integer;
 var
     Msg:String;
 begin
     if not FileExists(ExpandConstant('{tmp}\edit-git-bash.exe')) then
         ExtractTemporaryFile('edit-git-bash.exe');
     StringChangeEx(GitBashPath,'"','\"',True);
-    StringChangeEx(CommandLine,'"','\"',True);
-    CommandLine:='"'+GitBashPath+'" "'+CommandLine+'"';
+    CommandLine:='"'+GitBashPath+'" "'+TerminalHost+'"';
     Exec(ExpandConstant('{tmp}\edit-git-bash.exe'),CommandLine,'',SW_HIDE,ewWaitUntilTerminated,Result);
     if Result<>0 then begin
         if Result=1 then begin
@@ -1707,7 +1706,7 @@ begin
     }
 
     if RdbBashTerminal[GB_ConHost].checked then begin
-        OverrideGitBashCommandLine(AppDir+'\git-bash.exe','SHOW_CONSOLE=1 APPEND_QUOTE=1 @@COMSPEC@@ /S /C ""@@EXEPATH@@\usr\bin\bash.exe" --login -i');
+        SetGitBashTerminalHost(AppDir+'\git-bash.exe','ConHost');
     end;
 
     {

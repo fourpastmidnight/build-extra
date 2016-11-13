@@ -161,7 +161,7 @@ BUILD_EXTRA_WINPATH="$(cd "$SCRIPT_PATH"/.. && pwd -W | tr / \\\\)"
                 <File Id="ReleaseNotes_Css" Source="$BUILD_EXTRA_WINPATH\\ReleaseNotes.css" />
             </Component>
             <Component Directory="INSTALLFOLDER" Guid="">
-                <Condition>TERMINAL = "CmdPrompt"</Condition>
+                <Condition>TERMINAL = "ConHost"</Condition>
                 <File DoNotBind Id="EditGitBash" Source="$BUILD_EXTRA_WINPATH\\edit-git-bash.exe" KeyPath="yes" />
             </Component>
 EOF

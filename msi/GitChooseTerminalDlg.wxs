@@ -6,7 +6,7 @@
         <Control Type="RadioButtonGroup" Property="TERMINAL" Id="RadioButtonGroup" Width="310" Height="30" X="30" Y="77">
           <RadioButtonGroup Property="TERMINAL">
             <RadioButton Text="!(loc.GitChooseTerminalDlg_RbMinTTY)" Height="10" Value="MinTTY" Width="310" X="0" Y="0" />
-            <RadioButton Text="!(loc.GitChooseTerminalDlg_RbCmdPrompt)" Height="15" Value="CmdPrompt" Width="310" X="0" Y="15" />
+            <RadioButton Text="!(loc.GitChooseTerminalDlg_RbConHost)" Height="15" Value="ConHost" Width="310" X="0" Y="15" />
           </RadioButtonGroup>
         </Control>
         <Control Type="PushButton" Id="Back" Width="56" Height="17" X="180" Y="243" Text="!(loc.WixUIBack)" />
@@ -25,9 +25,9 @@
           <Condition Action="show">TERMINAL = "MinTTY"</Condition>
           <Condition Action="hide"><![CDATA[TERMINAL <> "MinTTY"]]></Condition>
         </Control>
-        <Control Type="Text" Id="CmdPromptText" Width="324" Height="50" X="23" Y="137" Hidden="yes" Text="!(loc.GitChooseTerminalDlg_CmdPromptText)">
-          <Condition Action="show">TERMINAL = "CmdPrompt"</Condition>
-          <Condition Action="hide"><![CDATA[TERMINAL <> "CmdPrompt"]]></Condition>
+        <Control Type="Text" Id="ConHostText" Width="324" Height="50" X="23" Y="137" Hidden="yes" Text="!(loc.GitChooseTerminalDlg_ConHostText)">
+          <Condition Action="show">TERMINAL = "ConHost"</Condition>
+          <Condition Action="hide"><![CDATA[TERMINAL <> "ConHost"]]></Condition>
         </Control>
       </Dialog>
     </UI>
