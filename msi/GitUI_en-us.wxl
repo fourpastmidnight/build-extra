@@ -21,13 +21,13 @@
   <String Id="GitChooseTerminalDlg_Title" Overridable="yes">[ProductName] Setup</String>
   <String Id="GitChooseTerminalDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
   <String Id="GitChooseTerminalDlg_RbMinTTY" Overridable="yes">&amp;MinTTY</String>
-  <String Id="GitChooseTerminalDlg_RbCmdPrompt" Overridable="yes">&amp;Windows Console Command Prompt</String>
+  <String Id="GitChooseTerminalDlg_RbConHost" Overridable="yes">&amp;Windows Console Command Prompt</String>
   <String Id="GitChooseTerminalDlgDescription" Overridable="yes">Choose the default [ProductName] Terminal Console</String>
   <String Id="GitChooseTerminalDlgTitle" Overridable="yes">{\WixUI_Font_Title}[ProductName] Default Terminal Console Selection</String>
   <String Id="GitChooseTerminalDlg_Text" Overridable="yes">Choose which command-line interface console to use with [ProductName]:</String>
   <String Id="GitChooseTerminalDlg_OptionDescription" Overridable="yes">Option Description:</String>
   <String Id="GitChooseTerminalDlg_MinTTYText" Overridable="yes">Git Bash will use MinTTY as the terminal emulator, which sports a resizable window, non-rectangular selections, a Unicode font, and emulation of various terminal standards such as VT-100 and XTerm-256Color. Windows console programs (such as interactive Python) must be launched via 'winpty' to work in MinTTY.</String>
-  <String Id="GitChooseTerminalDlg_CmdPromptText" Overridable="yes">Git will use the default command prompt console window of Windows (&quot;cmd.exe&quot;), which works well with Win32 console programs such as interactive Python or node.js, but has a very limited default scroll-back buffer, needs to be configured to use a Unicode font in order to display non-ASCII characters correctly, and prior to Windows 10, its window was not freely resizable and only allowed rectangular text selections.</String>
+  <String Id="GitChooseTerminalDlg_ConHostText" Overridable="yes">Git will use the default command prompt console window of Windows (&quot;cmd.exe&quot;), which works well with Win32 console programs such as interactive Python or node.js, but has a very limited default scroll-back buffer, needs to be configured to use a Unicode font in order to display non-ASCII characters correctly, and prior to Windows 10, its window was not freely resizable and only allowed rectangular text selections.</String>
 
   <String Id="GitCustomizeLineEndingsDlg_Title" Overridable="yes">[ProductName] Setup</String>
   <String Id="GitCustomizeLineEndingsDlgBannerBitmap" Overridable="yes">WixUI_Bmp_Banner</String>
